@@ -3,12 +3,12 @@ BEGIN
 	INSERT into campers(name, email, password, address, phone, emergency_contact) VALUES (username, e_mail, pass, addr, phone, emergency);
 END
 ---------------------------------------------------------------------------------------------------------------------------
-PROCEDURE `acceptSlotCoach`(c_name varchar(25))
+CREATE DEFINER=`jdvantho`@`%` PROCEDURE `acceptSlotCoach`(c_id INT(8), d DATE, s_time TIME)
 BEGIN
-	DECLARE cid int(8) default NULL;
-	select coach_id into cid from coaches where name = c_name;
+	DECLARE c_name varchar(25) default NULL;
+	select name into c_name from coaches where coach_id = c_id;
     
-    UPDATE teachingSlots SET coach_id = cid WHERE c_name = cid;
+    UPDATE teachingSlots SET coach_id = c_id, coach_name = c_name WHERE d = date and s_time = start_time;
 END
 ----------------------------------------------------------------------------------------------------------------------------
 PROCEDURE `addCoach`( username varchar(25), e_mail varchar(35), addr varchar(100), phone varchar(13), fee double)
