@@ -31,31 +31,34 @@ BEGIN
 	INSERT into camp_info(name, start_date, end_date, location, ice_fee, regi_fee) VALUES (campname, start_d, end_d, loc, icefee, regifee);
 END
 ------------------------------------------------------------------------------------------------------------------------------
-PROCEDURE `takeSlot`(camper_n varchar(25), d DATE, s_time TIME)
+CREATE DEFINER=`jdvantho`@`%` PROCEDURE `takeSlot`(camper_n varchar(25), d DATE, s_time TIME)
 BEGIN
-
     DECLARE cid 			int(8) 	default NULL;
     DECLARE fee 			double 	default NULL;
     DECLARE iceFee 			double 	default NULL;
     DECLARE coach 			int(8) 	default NULL;
-    DECLARE session_start 	TIME 	default NULL;
-    DECLARE session_end 	TIME 	default NULL;
+    DECLARE session_start 		TIME 	default NULL;
+    DECLARE session_end 		TIME 	default NULL;
     
     select camper_id 	into cid 			from campers where name = camper_n;
     select coach_id 	into coach 			from teachingSlots where d = date and s_time = start_time; 
-    select cost 		into fee 			from coaches where coach_id = coach;
-    select ice_fee 		into iceFee 		from camp_info where camp_id = 1;
-    select start_time 	into session_start	from ice_sessions where start_time <= s_time and s_time < end_time;
-	select end_time 	into session_end 	from ice_sessions where start_time <= s_time and s_time < end_time;
+    select cost 	into fee 			from coaches where coach_id = coach;
+    select ice_fee 	into iceFee 			from camp_info where camp_id = 1;
+    select start_time 	into session_start		from ice_sessions where start_time <= s_time and s_time < end_time;
+    select end_time 	into session_end 		from ice_sessions where start_time <= s_time and s_time < end_time;
     
     IF ( FEE IS NOT NULL and (select  camper_id from teachingSlots where d = date and s_time = start_time) IS NULL) 
     THEN
 		UPDATE campers SET bill = bill + fee where camper_id = cid;
 	END IF;
     UPDATE teachingSlots SET camper_id = cid, camper_name = camper_n WHERE d = date and s_time = start_time and coach_id IS NOT NULL and camper_id IS NULL;
-        
-	IF ((SELECT count(*) FROM teachingSlots WHERE (cid = camper_id and session_start <= s_time and s_time < session_end) or (coach_id IS NULL)) = 0)
-    THEN
+    
+    select session_start;
+    select session_end;
+    select s_time;
+	IF (((SELECT count(camper_id) FROM teachingSlots WHERE cid = camper_id and session_start <= start_time and start_time < session_end) = 1) and (coach IS NOT NULL) and
+		(SELECT camper_id FROM teachingSlots WHERE cid = camper_id and session_start <= start_time and start_time < session_end))
+	THEN
 		UPDATE campers SET bill = bill + iceFee where camper_id = cid;
 	END IF;
 END
