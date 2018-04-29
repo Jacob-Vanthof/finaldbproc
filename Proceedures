@@ -33,14 +33,15 @@ END
 ------------------------------------------------------------------------------------------------------------------------------
 PROCEDURE `takeSlot`(camper_n varchar(25), d DATE, s_time TIME)
 BEGIN
-	DECLARE cid 			int(8) 	default NULL;
+
+    DECLARE cid 			int(8) 	default NULL;
     DECLARE fee 			double 	default NULL;
     DECLARE iceFee 			double 	default NULL;
     DECLARE coach 			int(8) 	default NULL;
     DECLARE session_start 	TIME 	default NULL;
     DECLARE session_end 	TIME 	default NULL;
     
-	select camper_id 	into cid 			from campers where name = camper_n;
+    select camper_id 	into cid 			from campers where name = camper_n;
     select coach_id 	into coach 			from teachingSlots where d = date and s_time = start_time; 
     select cost 		into fee 			from coaches where coach_id = coach;
     select ice_fee 		into iceFee 		from camp_info where camp_id = 1;
