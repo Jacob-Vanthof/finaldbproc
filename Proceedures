@@ -1,0 +1,32 @@
+PROCEDURE `addCamper`( username varchar(25), e_mail varchar(35), addr varchar(100), phone varchar(13), emergency varchar(13), pass CHAR(128))
+BEGIN
+	INSERT into campers(name, email, password, address, phone, emergency_contact) VALUES (username, e_mail, pass, addr, phone, emergency);
+END
+---------------------------------------------------------------------------------------------------------------------------
+PROCEDURE `acceptSlotCoach`(c_name varchar(25))
+BEGIN
+	DECLARE cid int(8) default NULL;
+	select coach_id into cid from coaches where name = c_name;
+    
+    UPDATE teachingSlots SET coach_id = cid WHERE c_name = cid;
+END
+----------------------------------------------------------------------------------------------------------------------------
+PROCEDURE `addCoach`( username varchar(25), e_mail varchar(35), addr varchar(100), phone varchar(13), fee double)
+BEGIN
+	INSERT into coaches(name, email, address, phone, cost) VALUES (username, e_mail, addr, phone, fee);
+END
+-----------------------------------------------------------------------------------------------------------------------------
+PROCEDURE `addSession`(d date, s_time time, e_time time, comm varchar(280))
+BEGIN
+	INSERT into ice_sessions(date, start_time, end_time, comments) VALUES (d, s_time, e_time, comm);
+END
+-----------------------------------------------------------------------------------------------------------------------------
+PROCEDURE `addSlot`(s_time time, e_time time)
+BEGIN
+	INSERT into teachingSlots(start_time, end_time) VALUES (s_time, e_time);
+END
+------------------------------------------------------------------------------------------------------------------------------
+PROCEDURE `createCamp`(campname varchar(25), start_d DATE, end_d DATE, loc varchar(100), icefee double, regifee double)
+BEGIN
+	INSERT into camp_info(name, start_date, end_date, location, ice_fee, regi_fee) VALUES (campname, start_d, end_d, loc, icefee, regifee);
+END
