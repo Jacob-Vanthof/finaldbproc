@@ -11,9 +11,9 @@ BEGIN
     UPDATE teachingSlots SET coach_id = c_id, coach_name = c_name WHERE d = date and s_time = start_time;
 END
 ----------------------------------------------------------------------------------------------------------------------------
-PROCEDURE `addCoach`( username varchar(25), e_mail varchar(35), addr varchar(100), phone varchar(13), fee double)
+CREATE DEFINER=`jdvantho`@`%` PROCEDURE `addCoach`( username varchar(25), e_mail varchar(35), addr varchar(100), phone varchar(13), comm varchar(280), fee double, pass varchar(50))
 BEGIN
-	INSERT into coaches(name, email, address, phone, cost) VALUES (username, e_mail, addr, phone, fee);
+	INSERT into coaches(name, email, address, phone, description, cost, password) VALUES (username, e_mail, addr, phone, comm, fee, SHA2(pass,512));
 END
 -----------------------------------------------------------------------------------------------------------------------------
 PROCEDURE `addSession`(d date, s_time time, e_time time, comm varchar(280))
